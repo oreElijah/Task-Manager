@@ -23,7 +23,6 @@ async def register_user(user: UserIn):
 
 @router.post("/login", status_code=200)
 async def login_user(user: UserLogin):
-    print(user.id)
     cond = await get_user(user.email)
     if not cond:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User with the email does not exist")
