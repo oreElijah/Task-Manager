@@ -11,7 +11,7 @@ user_table = sqlalchemy.Table(
     sqlalchemy.Column("first_name", sqlalchemy.String),
     sqlalchemy.Column("middle_name", sqlalchemy.String),
     sqlalchemy.Column("last_name", sqlalchemy.String),
-    sqlalchemy.Column("email", sqlalchemy.String),
+    sqlalchemy.Column("email", sqlalchemy.String, unique=True),
     sqlalchemy.Column("password", sqlalchemy.String),
     sqlalchemy.Column("confirmed", sqlalchemy.Boolean, default=False)
 )
