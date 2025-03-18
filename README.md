@@ -1,4 +1,4 @@
-# FastAPI Todo App with Authentication
+# FastAPI Task Manager with Authentication
 
 This is a **FastAPI**-based Task Manager application with user authentication (JWT-based) and email confirmation. 🚀
 
