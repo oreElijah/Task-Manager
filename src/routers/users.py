@@ -1,4 +1,4 @@
-from fastapi import APIRouter, BackgroundTasks, HTTPException, status, Request, Response
+from fastapi import APIRouter, BackgroundTasks, HTTPException, status, Request
 from database.config import user_table, database
 
 from utils.email_confirmation import send_confirmation_email
