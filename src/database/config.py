@@ -12,11 +12,12 @@ user_table = sqlalchemy.Table(
     sqlalchemy.Column("middle_name", sqlalchemy.String),
     sqlalchemy.Column("last_name", sqlalchemy.String),
     sqlalchemy.Column("email", sqlalchemy.String),
-    sqlalchemy.Column("password", sqlalchemy.String)
+    sqlalchemy.Column("password", sqlalchemy.String),
+    sqlalchemy.Column("confirmed", sqlalchemy.Boolean, default=False)
 )
 
 todo_table = sqlalchemy.Table(
-    "todo",
+    "task",
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
     sqlalchemy.Column("task", sqlalchemy.String),
@@ -44,3 +45,4 @@ def create_tables():
     metadata.create_all(engine)
     print("created successfully ✅")
 
+# create_tables()

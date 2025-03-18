@@ -1,49 +1,41 @@
-# FastAPI Task Management API
+# FastAPI Todo App with Authentication
 
-## Overview
-This is a Task Management API built using **FastAPI** with **PostgreSQL** as the database. It provides user authentication and CRUD operations for managing tasks.
+This is a **FastAPI**-based Task Manager application with user authentication (JWT-based) and email confirmation. 🚀
 
 ## Features
-- **User Authentication**: Secure authentication using JWT tokens.
-- **Task Management**: Users can create, retrieve, update, and delete tasks.
-- **FastAPI**: High-performance framework for building APIs with automatic documentation.
-- **PostgreSQL**: Robust and scalable relational database for storing tasks.
-- **No ORM**: Direct SQL queries are used instead of an ORM.
+
+- ✅ User Registration with Email Confirmation 📧
+- ✅ Secure User Authentication with JWT 🔐
+- ✅ CRUD Operations for Todo Tasks ✅
+- ✅ User-specific Task Management 📝
+- ✅ FastAPI + PostgreSQL Integration⚡
 
 ## Installation
 
-### Prerequisites
-- Python 3.10+
-- PostgreSQL
-- Virtual Environment (optional but recommended)
+1. **Clone the repository**
 
-### Setup
-
-1. **Clone the Repository**
    ```bash
-   git clone https://github.com/yourusername/fastapi-task-api.git
-   cd fastapi-task-api
+   git clone https://github.com/yourusername/fastapi-todo-app.git
+   cd fastapi-todo-app
    ```
 
-2. **Create and Activate a Virtual Environment**
+2. **Create a virtual environment and activate it**
+
    ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
+   python -m venv venv
+   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
    ```
 
-3. **Install Dependencies**
+3. **Install dependencies**
+
    ```bash
    pip install -r requirements.txt
    ```
 
-4. **Set Up Environment Variables**
-   Create a `.env` file in the project root with the following variables:
-   ```ini
-   DATABASE_URL=postgresql://user:password@localhost/dbname
-   SECRET_KEY=your_secret_key_here
-   ```
+4. **Set up environment variables** (e.g., `.env` file)
 
-5. **Start the Server**
+5. **Run the application**
+
    ```bash
    uvicorn main:app --reload
    ```
@@ -51,16 +43,62 @@ This is a Task Management API built using **FastAPI** with **PostgreSQL** as the
 ## API Endpoints
 
 ### Authentication
-- `POST /register/` - Register a new user
-- `POST /login/` - Log in to get an access token
 
-### Tasks
-- `POST /task/` - Create a new task (Authenticated)
-- `GET /tasks/` - Retrieve all tasks (Authenticated)
-- `PUT /task/{task_id}` - Update a task (Authenticated)
-- `DELETE /task/{task_id}` - Delete a task (Authenticated)
+| Method | Endpoint | Description |
+|--------|---------|-------------|
+| `POST` | `/api/v1/user/register` | Register a new user |
+| `POST` | `/api/v1/user/login` | Login user and get JWT |
+| `GET`  | `/api/v1/user/confirm-email/{token}` | Confirm user email |
 
-## Documentation
-Once the server is running, access the interactive API documentation at:
-- Swagger UI: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-- ReDoc: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
+### Todo Management
+
+| Method | Endpoint | Description |
+|--------|---------|-------------|
+| `GET`  | `/api/v1/task/check-task` | Retrieve all tasks |
+| `POST` | `/api/v1/task/create-task` | Create a new task |
+| `PUT`  | `/api/v1/task/update-task/{task_id}` | Update a task |
+| `DELETE` | `/api/v1/task/delete-task/{task_id}` | Delete a task |
+
+## Example Usage
+
+1. **Register a user**
+
+   ```json
+   {
+     "first_name": "John",
+     "last_name": "Doe",
+     "email": "john@example.com",
+     "password": "securepassword"
+   }
+   ```
+
+2. **Login to get a token**
+
+   ```json
+   {
+     "email": "john@example.com",
+     "password": "securepassword"
+   }
+   ```
+
+   Response:
+
+   ```json
+   {
+     "token": "Bearer your_jwt_token_here"
+   }
+   ```
+
+3. **Use the token to access protected routes**
+
+   ```bash
+   curl -H "Authorization: Bearer your_jwt_token_here" http://127.0.0.1:8000/api/v1/check-task
+   ```
+
+## License
+
+This project is licensed under the **MIT License**.
+
+---
+
+Made with ❤️ by Elijah 🚀

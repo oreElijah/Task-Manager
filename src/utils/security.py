@@ -27,10 +27,10 @@ def get_password_hash(password:str):
 def verify_password(password: str, hashed_password: str):
     return pwd_content.verify(password, hashed_password)
 
-def create_token(id:int):
+def create_access_token(id:int):
     expire = datetime.datetime.now(datetime.timezone.utc)+datetime.timedelta(minutes=30)
     expire = int(expire.timestamp()) 
-    jwt_data = {"sub":str(id), "exp":expire}
+    jwt_data = {"sub":str(id), "exp":expire, "type": "access"}
     encoded_jwt = jose.jwt.encode(jwt_data,key=SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
@@ -39,7 +39,7 @@ async def get_user(email: str) -> Optional[dict]:
     result = await database.fetch_one(query)
     return result
 
-def decode_token(token: str):
+def decode_access_token(token: str):
     try:
         payload = jose.jwt.decode(token, key=SECRET_KEY, algorithms=[ALGORITHM])
         return payload
@@ -47,12 +47,16 @@ def decode_token(token: str):
         raise HTTPException(status_code=401,detail="Invalid token")
     
 async def get_current_user(token: str=Security(oauth2_scheme)):
-    payload = decode_token(token)
+    payload = decode_access_token(token)
+    if payload.get("type") is None or payload.get("type")!="access":
+        raise HTTPException(status_code=401, detail="invalid token")
     if not payload:
         raise HTTPException(status_code=401, detail="Invalid token")
     return payload
 def get_current_user_id(token: str=Security(oauth2_scheme)):
-    payload = decode_token(token)
+    payload = decode_access_token(token)
+    if payload.get("type") is None or payload.get("type")!="access":
+        raise HTTPException(status_code=401, detail="invalid token")
     if not payload:
         raise HTTPException(status_code=401, detail="Invalid token")
     user_id = int(payload.get("sub"))
@@ -62,3 +66,22 @@ def get_current_user_id(token: str=Security(oauth2_scheme)):
     # result = await database.fetch_one(cond2)
     # if result:
         # return result
+def create_confirmation_token(email: str):
+    expire = datetime.datetime.now(datetime.timezone.utc)+datetime.timedelta(minutes=1440)
+    expire = int(expire.timestamp()) 
+    jwt_data = {"sub":email, "exp":expire, "type": "confirmation"}
+    encoded_jwt = jose.jwt.encode(jwt_data,key=SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+def decode_confirmation_token(token: str):
+    try:
+        payload = jose.jwt.decode(token, key=SECRET_KEY, algorithms=[ALGORITHM])
+    except jose.jwt.JWTError:
+        raise HTTPException(status_code=401,detail="Invalid token") 
+    email = payload.get("sub")
+    if email is None:
+        raise HTTPException(status_code=401, detail="invalid token")    
+       
+    if payload.get("type") is None or payload.get("type")!="confirmation":
+        raise HTTPException(status_code=401, detail="invalid token")    
+    return email
